@@ -19,9 +19,9 @@ const firebaseConfig = {
   apiKey: "AIzaSyBmxW9vgmKcaqdsc1qrhG80t13BQzFrUro",
   authDomain: "my-anki-app-be46b.firebaseapp.com",
   projectId: "my-anki-app-be46b",
-  storageBucket: "my-anki-app-be46b.appspot.com",
+  storageBucket: "my-anki-app-be46b.firebasestorage.app",
   messagingSenderId: "789562071385",
-  appId: "1:789562071385:web:YOUR_APP_ID"
+  appId: "1:789562071385:web:04a6b18d3f28a17af61448"
 };
 
 const app = initializeApp(firebaseConfig);
