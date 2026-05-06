@@ -1,3 +1,5 @@
+// db.js
+
 // ローカルデータソース: IndexedDB を使ってカードを永続化する層
 export class DexieLocalCardDataSource {
   constructor(dbName = "CardDB") {
@@ -120,5 +122,30 @@ export class CardRepository {
     }));
 
     return await this.localDataSource.bulkAdd(cardsToStore);
+  }
+
+  // ローカル DB を全削除（JSON インポート用）
+  async clearLocal() {
+    return await this.localDataSource.clear();
+  }
+
+  // ローカル → Firebase 同期
+  async syncToRemote(uid) {
+    const localCards = await this.localDataSource.getCardsByUid(uid);
+
+    for (const card of localCards) {
+      if (!card.firebaseId) {
+        const docRef = await this.remoteDataSource.addCard(uid, card);
+        if (docRef?.id) {
+          await this.localDataSource.updateCard(card.id, {
+            firebaseId: docRef.id
+          });
+        }
+      } else {
+        await this.remoteDataSource.updateCard(card.firebaseId, card);
+      }
+    }
+
+    return true;
   }
 }

@@ -1,3 +1,5 @@
+// app.js
+
 // Firebase CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
@@ -13,11 +15,13 @@ import { FirebaseCardDataSource } from "./firebaseCardDataSource.js";
 import { createCardUseCases } from "./usecases/cardUseCases.js";
 
 // アプリ層: UI とユースケース / リポジトリの橋渡し
-// 🔑 Firebase設定（ここだけ自分のに変える）
 const firebaseConfig = {
-  apiKey:"AIzaSyBmxW9vgmKcaqdsc1qrhG80t13BQzFrUro", 
-  authDomain:"my-anki-app-be46b.firebaseapp.com",
+  apiKey: "AIzaSyBmxW9vgmKcaqdsc1qrhG80t13BQzFrUro",
+  authDomain: "my-anki-app-be46b.firebaseapp.com",
   projectId: "my-anki-app-be46b",
+  storageBucket: "my-anki-app-be46b.appspot.com",
+  messagingSenderId: "789562071385",
+  appId: "1:789562071385:web:YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -34,9 +38,7 @@ const dbReady = (async () => {
   cardRepository.init();
 })();
 
-// -------------------------
 // パスワードバリデーション
-// -------------------------
 function validatePassword(password) {
   if (password.length < 8) return "8文字以上にしてください";
   if (!/[A-Z]/.test(password)) return "大文字を含めてください";
@@ -45,17 +47,13 @@ function validatePassword(password) {
   return null;
 }
 
-// -------------------------
 // DOM取得
-// -------------------------
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const message = document.getElementById("message");
 const appDiv = document.getElementById("anki-app");
 
-// -------------------------
 // 登録
-// -------------------------
 document.getElementById("registerBtn").onclick = async () => {
   const email = emailInput.value;
   const password = passwordInput.value;
@@ -70,13 +68,16 @@ document.getElementById("registerBtn").onclick = async () => {
     await createUserWithEmailAndPassword(auth, email, password);
     message.textContent = "登録成功";
   } catch (e) {
-    message.textContent = e.message;
+    if (e.code === "auth/configuration-not-found") {
+      message.textContent =
+        "Firebase 設定が不正です。Firebase コンソールでプロジェクトの認証設定と localhost の許可ドメインを確認してください。";
+    } else {
+      message.textContent = e.message;
+    }
   }
 };
 
-// -------------------------
 // ログイン
-// -------------------------
 document.getElementById("loginBtn").onclick = async () => {
   try {
     await signInWithEmailAndPassword(
@@ -90,18 +91,12 @@ document.getElementById("loginBtn").onclick = async () => {
   }
 };
 
-// -------------------------
 // ログアウト
-// -------------------------
 document.getElementById("logoutBtn").onclick = async () => {
   await signOut(auth);
 };
 
-// -------------------------
-// 認証状態監視（最重要）
-// -------------------------
-
-// -------------------------
+// 認証状態監視（UI表示）
 onAuthStateChanged(auth, (user) => {
   if (user) {
     message.textContent = "ログイン中: " + user.email;
@@ -121,6 +116,15 @@ window.syncFromFirebase = async function () {
   return await cardUseCases.syncCards(user.uid);
 };
 
+window.syncToFirebase = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await dbReady;
+  await cardUseCases.syncToRemote(user.uid);
+  alert("Firebase に同期しました");
+};
+
 window.auth = auth;
 
 // ローカル DB からカードを読み出して画面を更新する関数
@@ -130,7 +134,22 @@ async function refreshCards() {
 
   await dbReady;
   const cards = await cardUseCases.getAllCards(user.uid);
-  console.log("refreshCards", cards);
+
+  const list = document.getElementById("cardList");
+  if (!list) return;
+
+  list.innerHTML = cards
+    .map(
+      (c) => `
+      <div class="card">
+        <p><strong>Q:</strong> ${c.q}</p>
+        <p><strong>A:</strong> ${c.a}</p>
+        <button onclick="window.editCard(${c.id})">編集</button>
+        <button onclick="window.deleteCard(${c.id})">削除</button>
+      </div>
+    `
+    )
+    .join("");
 }
 
 onAuthStateChanged(auth, async (user) => {
@@ -139,3 +158,284 @@ onAuthStateChanged(auth, async (user) => {
     await refreshCards();
   }
 });
+
+window.syncToFirebase = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await dbReady;
+  await cardUseCases.syncToRemote(user.uid);
+  alert("Firebase に同期しました");
+};
+
+// 問題作成
+window.createCard = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const qEl = document.getElementById("question");
+  const aEl = document.getElementById("answer");
+  if (!qEl || !aEl) return;
+
+  const q = qEl.value;
+  const a = aEl.value;
+  if (!q || !a) {
+    alert("問題文と答えを入力してください");
+    return;
+  }
+
+  await dbReady;
+  await cardUseCases.addCard(user.uid, {
+    q,
+    a,
+    learned: false,
+    reviewCount: 0,
+    nextReview: null
+  });
+
+  alert("保存しました");
+  qEl.value = "";
+  aEl.value = "";
+  await refreshCards();
+};
+
+// 問題編集
+window.editCard = async function (id) {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await dbReady;
+  const cards = await cardUseCases.getAllCards(user.uid);
+  const card = cards.find((c) => c.id === id);
+  if (!card) return;
+
+  const q = prompt("問題文を編集", card.q);
+  const a = prompt("答えを編集", card.a);
+  if (!q || !a) return;
+
+  await cardUseCases.updateCard(user.uid, id, { q, a });
+  await refreshCards();
+};
+
+// 問題削除
+window.deleteCard = async function (id) {
+  const user = auth.currentUser;
+  if (!user) return;
+  if (!confirm("この問題を削除しますか？")) return;
+
+  await dbReady;
+  await cardUseCases.deleteCard(user.uid, id);
+  await refreshCards();
+};
+
+// JSON エクスポート
+window.exportJson = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await dbReady;
+  const json = await cardUseCases.exportJson(user.uid);
+
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "cards.json";
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// JSON インポート
+window.importJson = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const input = document.getElementById("importFile");
+  if (!input || !input.files[0]) {
+    alert("JSON ファイルを選択してください");
+    return;
+  }
+
+  const text = await input.files[0].text();
+
+  await dbReady;
+  await cardUseCases.importJson(user.uid, text);
+  await refreshCards();
+  alert("インポートしました");
+};
+
+// 学習モード
+window.startLearning = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await dbReady;
+  const cards = await cardUseCases.getLearningCards(user.uid);
+  if (!cards.length) {
+    alert("問題がありません。先に作成してください。");
+    return;
+  }
+
+  let index = 0;
+
+  const qView = document.getElementById("questionView");
+  const aView = document.getElementById("answerView");
+  const showBtn = document.getElementById("showAnswerBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  function showCard() {
+    const card = cards[index];
+    qView.textContent = card.q;
+    aView.textContent = "";
+  }
+
+  function showAnswer() {
+    aView.textContent = cards[index].a;
+  }
+
+  function nextCard() {
+    index = (index + 1) % cards.length;
+    showCard();
+  }
+
+  showBtn.onclick = showAnswer;
+  nextBtn.onclick = nextCard;
+
+  showCard();
+};
+
+// 問題作成
+window.createCard = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const qEl = document.getElementById("question");
+  const aEl = document.getElementById("answer");
+  if (!qEl || !aEl) return;
+
+  const q = qEl.value;
+  const a = aEl.value;
+  if (!q || !a) {
+    alert("問題文と答えを入力してください");
+    return;
+  }
+
+  await dbReady;
+  await cardUseCases.addCard(user.uid, {
+    q,
+    a,
+    learned: false,
+    reviewCount: 0,
+    nextReview: null
+  });
+
+  alert("保存しました");
+  qEl.value = "";
+  aEl.value = "";
+  await refreshCards();
+};
+
+// 問題編集
+window.editCard = async function (id) {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await dbReady;
+  const cards = await cardUseCases.getAllCards(user.uid);
+  const card = cards.find((c) => c.id === id);
+  if (!card) return;
+
+  const q = prompt("問題文を編集", card.q);
+  const a = prompt("答えを編集", card.a);
+  if (!q || !a) return;
+
+  await cardUseCases.updateCard(user.uid, id, { q, a });
+  await refreshCards();
+};
+
+// 問題削除
+window.deleteCard = async function (id) {
+  const user = auth.currentUser;
+  if (!user) return;
+  if (!confirm("この問題を削除しますか？")) return;
+
+  await dbReady;
+  await cardUseCases.deleteCard(user.uid, id);
+  await refreshCards();
+};
+
+// JSON エクスポート
+window.exportJson = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await dbReady;
+  const json = await cardUseCases.exportJson(user.uid);
+
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "cards.json";
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// JSON インポート
+window.importJson = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const input = document.getElementById("importFile");
+  if (!input || !input.files[0]) {
+    alert("JSON ファイルを選択してください");
+    return;
+  }
+
+  const text = await input.files[0].text();
+
+  await dbReady;
+  await cardUseCases.importJson(user.uid, text);
+  await refreshCards();
+  alert("インポートしました");
+};
+
+// 学習モード
+window.startLearning = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await dbReady;
+  const cards = await cardUseCases.getLearningCards(user.uid);
+  if (!cards.length) {
+    alert("問題がありません。先に作成してください。");
+    return;
+  }
+
+  let index = 0;
+
+  const qView = document.getElementById("questionView");
+  const aView = document.getElementById("answerView");
+  const showBtn = document.getElementById("showAnswerBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  function showCard() {
+    const card = cards[index];
+    qView.textContent = card.q;
+    aView.textContent = "";
+  }
+
+  function showAnswer() {
+    aView.textContent = cards[index].a;
+  }
+
+  function nextCard() {
+    index = (index + 1) % cards.length;
+    showCard();
+  }
+
+  showBtn.onclick = showAnswer;
+  nextBtn.onclick = nextCard;
+
+  showCard();
+};

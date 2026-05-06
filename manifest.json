@@ -1,18 +1,18 @@
 {
-  "name": "構文対応 暗記カードアプリ",
-  "short_name": "暗記カード",
-  "start_url": "./",
+  "name": "ANKI APP",
+  "short_name": "ANKI",
+  "start_url": "splash.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007bff",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
-      "src": "./icons/icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

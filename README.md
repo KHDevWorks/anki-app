@@ -88,12 +88,13 @@ OS のテーマに合わせて自動切り替え。
 
 ---
 
-## �📦 セットアップ方法
+## 📦 セットアップ方法
 
 ### 1. リポジトリをクローン
 
 ```bash
-git clone https://github.com/YOUR_NAME/YOUR_REPO_NAME.gitcd anki-app
+git clone https://github.com/YOUR_NAME/YOUR_REPO_NAME.git
+cd anki-app
 ```
 
 ### 2. Docker で起動（推奨）
@@ -111,7 +112,9 @@ docker-compose up --build
 
 ### 3. 手動セットアップ（オプション）
 
-Docker を使用しない場合、直接ブラウザで `index.html` を開いてください。
+Docker を使用しない場合は、ローカル HTTP サーバーで `index.html` を提供してください。
 
-- Firebase 設定を `app.js` の `firebaseConfig` に設定
+- `app.js` の `firebaseConfig` に Firebase 設定を追加
+- Firebase Console で Email/Password 認証を有効化
+- Firebase Console の許可済みドメインに `http://localhost:8000` と `http://127.0.0.1:8000` を追加
 - Dexie.js は CDN から読み込まれます

@@ -2,31 +2,73 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>Anki App</title>
-  <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+  <title>ANKI APP</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/dexie@3/dist/dexie.js"></script>
 </head>
+
 <body>
-  <!-- 認証UI -->
-  <div id="auth">
-    <h2>ログイン / 登録</h2>
+  <h1>ANKI APP</h1>
 
-    <input id="email" placeholder="email" />
-    <input id="password" type="password" placeholder="password" />
-
+  <!-- 認証エリア -->
+  <div>
+    <input id="email" type="email" placeholder="メールアドレス" />
+    <input id="password" type="password" placeholder="パスワード" />
     <button id="registerBtn">登録</button>
     <button id="loginBtn">ログイン</button>
     <button id="logoutBtn">ログアウト</button>
-
     <p id="message"></p>
   </div>
 
   <!-- アプリ本体 -->
-  <div id="anki-app" style="display:none;">
-    <h1>ANKI APP</h1>
-    <p>ログイン後のみ表示される</p>
+  <div id="anki-app" style="display:none; margin-top:20px;">
+
+    <!-- 問題作成 -->
+    <h2>問題作成</h2>
+    <textarea id="question" placeholder="問題文"></textarea>
+    <textarea id="answer" placeholder="答え"></textarea>
+    <button onclick="createCard()">保存</button>
+
+    <hr />
+
+    <!-- 問題一覧 -->
+    <h2>問題一覧</h2>
+    <div id="cardList"></div>
+
+    <hr />
+
+    <!-- JSON 入出力 -->
+    <h2>JSON 入出力</h2>
+    <button onclick="exportJson()">JSON エクスポート</button>
+    <input type="file" id="importFile" accept="application/json" />
+    <button onclick="importJson()">JSON インポート</button>
+
+    <hr />
+
+    <!-- Firebase 同期 -->
+    <h2>Firebase 同期</h2>
+    <button onclick="syncFromFirebase()">Firebase → ローカル同期</button>
+    <button onclick="syncToFirebase()">ローカル → Firebase 同期</button>
+
+    <hr />
+
+    <!-- 学習モード -->
+    <h2>学習モード</h2>
+    <button onclick="startLearning()">学習開始</button>
+
+    <div style="margin-top:20px;">
+      <p><strong>問題:</strong></p>
+      <div id="questionView"></div>
+
+      <p><strong>答え:</strong></p>
+      <div id="answerView"></div>
+
+      <button id="showAnswerBtn">答えを見る</button>
+      <button id="nextBtn">次の問題</button>
+    </div>
+
   </div>
 
   <script type="module" src="app.js"></script>
 </body>
 </html>
-

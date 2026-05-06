@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KH Studio — Splash</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'DM Sans',sans-serif;}
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0;}
+  body::after{content:'';position:fixed;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity:.4;pointer-events:none;z-index:1;}
+  .stage{position:relative;z-index:10;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ambient{position:absolute;width:480px;height:480px;background:radial-gradient(circle,rgba(0,229,255,0.07)0%,transparent 65%);border-radius:50%;animation:pulse 4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.1);opacity:.6;}}
+  .logo-wrap{position:relative;width:220px;height:220px;opacity:0;animation:fadein 1s ease .4s forwards;}
+  .wordmark{margin-top:36px;text-align:center;opacity:0;animation:fadeup .9s ease .9s forwards;}
+  .wordmark .name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;letter-spacing:.22em;color:#fff;}
+  .wordmark .name span{color:#00e5ff;}
+  .wordmark .rule{width:100%;height:1px;background:linear-gradient(90deg,transparent,#00e5ff,transparent);margin:14px 0;}
+  .wordmark .sub{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.55em;color:#00e5ff;text-transform:uppercase;}
+  .loader-wrap{position:fixed;bottom:60px;width:180px;opacity:0;animation:fadein .8s ease 1.4s forwards;}
+  .loader-track{width:100%;height:1px;background:rgba(255,255,255,0.08);}
+  .loader-fill{height:100%;width:0;background:linear-gradient(90deg,#00e5ff,#80f4ff);animation:load 2.2s cubic-bezier(.4,0,.2,1) 1.6s forwards;}
+  @keyframes load{0%{width:0;}60%{width:75%;}100%{width:100%;}}
+  @keyframes fadein{from{opacity:0;}to{opacity:1;}}
+  @keyframes fadeup{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+
+<body>
+
+<canvas class="stars" id="stars"></canvas>
+
+<div class="stage">
+  <div class="ambient"></div>
+
+  <div class="logo-wrap">
+    <!-- ★ あなたの KH ロゴ SVG をそのまま貼る部分 ★ -->
+     <!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KH Studio — Splash</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'DM Sans', sans-serif; }
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  body::after { content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4; pointer-events: none; z-index: 1; }
+  .stage { position: relative; z-index: 10; width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ambient { position: absolute; width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 65%);
+    border-radius: 50%; animation: pulse-ambient 4s ease-in-out infinite; pointer-events: none; }
+  @keyframes pulse-ambient { 0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.1);opacity:0.6;} }
+  .logo-wrap { position: relative; width: 220px; height: 220px; opacity: 0; animation: fade-in 1s ease 0.4s forwards; }
+  .logo-wrap svg { width: 100%; height: 100%; }
+  .wordmark { margin-top: 36px; text-align: center; opacity: 0; animation: fade-up 0.9s ease 0.9s forwards; }
+  .wordmark .name { font-family: 'Orbitron', sans-serif; font-weight: 900;
+    font-size: clamp(28px,5vw,42px); letter-spacing: 0.22em; color: #fff; }
+  .wordmark .name span { color: #00e5ff; }
+  .wordmark .rule { width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, #00e5ff, transparent); margin: 14px 0; }
+  .wordmark .sub { font-family: 'Orbitron', sans-serif; font-weight: 400;
+    font-size: clamp(8px,1.2vw,11px); letter-spacing: 0.55em; color: #00e5ff; text-transform: uppercase; }
+  .ver { position: fixed; bottom: 36px; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; letter-spacing: 0.3em; color: rgba(255,255,255,0.18);
+    text-transform: uppercase; opacity: 0; animation: fade-in 1s ease 1.6s forwards; }
+  .loader-wrap { position: fixed; bottom: 60px; width: 180px; opacity: 0; animation: fade-in 0.8s ease 1.4s forwards; }
+  .loader-track { width: 100%; height: 1px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .loader-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#00e5ff,#80f4ff);
+    border-radius: 2px; animation: load 2.2s cubic-bezier(0.4,0,0.2,1) 1.6s forwards;
+    box-shadow: 0 0 8px rgba(0,229,255,0.6); }
+  @keyframes load { 0%{width:0;}60%{width:75%;}100%{width:100%;} }
+  @keyframes fade-in { from{opacity:0;} to{opacity:1;} }
+  @keyframes fade-up { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+</style>
+</head>
+
+<body>
+
+<canvas class="stars" id="stars"></canvas>
+
+<div class="stage">
+  <div class="ambient"></div>
+
+  <div class="logo-wrap">
+    <!-- SVG（あなたのコードそのまま） -->
+    <!-- 省略せずそのまま貼ってOK -->
+  </div>
+
+  <div class="wordmark">
+    <div class="name">KH <span>Studio</span></div>
+    <div class="rule"></div>
+    <div class="sub">AI & App Engineering</div>
+  </div>
+
+  <div class="loader-wrap">
+    <div class="loader-track"><div class="loader-fill"></div></div>
+  </div>
+
+  <div class="ver">v1.0.0 · kouno hiroaki</div>
+</div>
+
+<script>
+setTimeout(() => {
+  window.location.href = "index.html";
+}, 5000);
+</script>
+
+<script>
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+resize(); addEventListener('resize',resize);
+const STAR_COUNT=160;
+const stars=[...Array(STAR_COUNT)].map(()=>({
+  x:Math.random(),y:Math.random(),r:Math.random()*1.2+0.2,
+  o:Math.random()*0.5+0.1,speed:Math.random()*0.0003+0.0001,
+  phase:Math.random()*Math.PI*2
+}));
+let t=0;
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  t+=0.016;
+  stars.forEach(s=>{
+    const opacity=s.o*(0.6+0.4*Math.sin(t*s.speed*100+s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x*canvas.width,s.y*canvas.height,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${opacity})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
+
+    <!-- （省略せず splash.html に入れてください） -->
+  </div>
+
+  <div class="wordmark">
+    <div class="name">KH <span>Studio</span></div>
+    <div class="rule"></div>
+    <div class="sub">AI & App Engineering</div>
+  </div>
+
+  <div class="loader-wrap">
+    <div class="loader-track"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+<script>
+setTimeout(()=>{ location.href="index.html"; },5000);
+</script>
+
+<script>
+const canvas=document.getElementById('stars');const ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}resize();addEventListener('resize',resize);
+const STAR_COUNT=160;const stars=[...Array(STAR_COUNT)].map(()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.2+.2,o:Math.random()*.5+.1,speed:Math.random()*.0003+.0001,phase:Math.random()*Math.PI*2}));
+let t=0;function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);t+=.016;
+stars.forEach(s=>{const o=s.o*(.6+.4*Math.sin(t*s.speed*100+s.phase));ctx.beginPath();ctx.arc(s.x*canvas.width,s.y*canvas.height,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${o})`;ctx.fill();});
+requestAnimationFrame(draw);}draw();
+</script>
+
+</body>
+</html>
