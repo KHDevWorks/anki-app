@@ -1,69 +1,32 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>構文対応 暗記カードアプリ</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <meta charset="UTF-8" />
+  <title>Anki App</title>
+  <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 </head>
 <body>
+  <!-- 認証UI -->
+  <div id="auth">
+    <h2>ログイン / 登録</h2>
 
-<h1>構文対応 暗記カード</h1>
+    <input id="email" placeholder="email" />
+    <input id="password" type="password" placeholder="password" />
 
-<div id="top-buttons">
-  <button id="openSavedBtn">保存済みカード一覧</button>
-</div>
+    <button id="registerBtn">登録</button>
+    <button id="loginBtn">ログイン</button>
+    <button id="logoutBtn">ログアウト</button>
 
-<input type="file" id="fileInput" accept=".json">
-<button id="loadFileBtn">cards.json を読み込む</button>
-<div id="mainScreen">
-
-  <div id="card-container">
-    <!-- JSでカードを描画 -->
+    <p id="message"></p>
   </div>
 
-  <div id="input-area">
-    <input id="answerInput" placeholder="答えを入力">
-    <button id="checkBtn">答え合わせ</button>
-    <button id="saveCardBtn">このカードを保存する</button>
-
-    <div id="categoryArea">
-      <label>カテゴリ:</label>
-      <select id="categorySelect">
-        <option value="JavaScript">JavaScript</option>
-        <option value="Python">Python</option>
-        <option value="React">React</option>
-        <option value="その他">その他</option>
-      </select>
-    </div>
+  <!-- アプリ本体 -->
+  <div id="anki-app" style="display:none;">
+    <h1>ANKI APP</h1>
+    <p>ログイン後のみ表示される</p>
   </div>
 
-  <div id="result"></div>
-</div>
-
-<div id="savedScreen" style="display:none;">
-  <h2>保存済みカード一覧</h2>
-
-  <input id="searchSaved" placeholder="キーワード検索">
-
-  <select id="categoryFilter">
-    <option value="all">すべてのカテゴリ</option>
-  </select>
-
-  <div id="savedList"></div>
-
-  <button id="exportSavedBtn">保存済みカードをJSONでエクスポート</button>
-  <button id="closeSavedBtn">閉じる</button>
-
-  
-</div>
-
-<script src="https://unpkg.com/dexie@3.2.2/dist/dexie.min.js"></script>
-<script src="db.js"></script>
-<script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
+

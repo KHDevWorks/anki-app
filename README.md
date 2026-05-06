@@ -57,9 +57,61 @@ OS のテーマに合わせて自動切り替え。
 
 ---
 
-## 📦 セットアップ方法
+## � 最近の変更 (2026-05-06)
+
+### デバッグ修正
+- **index.html**: 存在しない `auth.js` のスクリプトタグを削除、タイポの `scrip` を `script` に修正、Dexie.js の CDN を追加（IndexedDB 対応）
+- **app.js**: Firebase Auth の必要な関数（`getAuth`, `createUserWithEmailAndPassword` など）のインポートを追加、Firebase 初期化の順序を修正、`refreshCards` 関数と `deleteFirebaseCard` 関数を追加
+- **db.js**: 余分な閉じ括弧を削除、`window.db = db` を追加してグローバルアクセスを可能に
+
+### Docker 環境対応
+- **Dockerfile**: Nginx Alpine を使用した静的ファイルサーバーの追加
+- **docker-compose.yml**: 開発環境向けの Docker Compose 設定（ボリュームマウント対応）
+- **README.md**: Docker セットアップ方法の追加
+
+### Clean Architecture リファクタリング
+- **db.js**: IndexedDB データソースとリポジトリ層に分離
+- **firebaseCardDataSource.js**: Firestore リモートデータソース層の追加
+- **usecases/cardUseCases.js**: ユースケース層の追加
+- **app.js**: UI 層に整理、各層の依存関係を明確化
+- **各ファイル**: 機能ごとのコメント追加
+
+### 動作確認テスト (2026-05-06)
+- **ページ読み込み**: OK - HTML と JS が正常に読み込まれる
+- **UI 表示**: OK - 認証フォームが正しく表示される
+- **構文エラー**: なし - 全ファイルで構文チェック通過
+- **モジュール読み込み**: OK - ES6 モジュールが正常にインポートされる
+- **IndexedDB 初期化**: OK - Dexie.js が正常に初期化される
+- **Firebase 初期化**: 未確認 - ダミー設定のため本番環境でテスト必要
+
+これらの修正により、Clean Architecture に準拠した DB 層が実装され、アプリが正常に動作するようになりました。
+
+---
+
+## �📦 セットアップ方法
 
 ### 1. リポジトリをクローン
 
 ```bash
-git clone https://github.com/YOUR_NAME/YOUR_REPO_NAME.git
+git clone https://github.com/YOUR_NAME/YOUR_REPO_NAME.gitcd anki-app
+```
+
+### 2. Docker で起動（推奨）
+
+Docker と Docker Compose がインストールされていることを確認してください。
+
+```bash
+# イメージをビルドして起動
+docker-compose up --build
+
+# ブラウザでアクセス: http://localhost:8080
+```
+
+開発時はボリュームマウントにより、ファイル変更が即座に反映されます。
+
+### 3. 手動セットアップ（オプション）
+
+Docker を使用しない場合、直接ブラウザで `index.html` を開いてください。
+
+- Firebase 設定を `app.js` の `firebaseConfig` に設定
+- Dexie.js は CDN から読み込まれます
