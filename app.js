@@ -98,9 +98,13 @@ document.getElementById("logoutBtn").onclick = async () => {
 
 // 認証状態監視（UI表示）
 onAuthStateChanged(auth, (user) => {
+// 認証状態監視（UI表示および初期データ同期）
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     message.textContent = "ログイン中: " + user.email;
     appDiv.style.display = "block";
+    await window.syncFromFirebase();
+    await refreshCards();
   } else {
     message.textContent = "未ログイン";
     appDiv.style.display = "none";
