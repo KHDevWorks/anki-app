@@ -16,12 +16,12 @@ import { createCardUseCases } from "./usecases/cardUseCases.js";
 
 // アプリ層: UI とユースケース / リポジトリの橋渡し
 const firebaseConfig = {
-  apiKey: "AIzaSyBmxW9vgmKcaqdsc1qrhG80t13BQzFrUro",
-  authDomain: "my-anki-app-be46b.firebaseapp.com",
-  projectId: "my-anki-app-be46b",
-  storageBucket: "my-anki-app-be46b.firebasestorage.app",
-  messagingSenderId: "789562071385",
-  appId: "1:789562071385:web:04a6b18d3f28a17af61448"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
