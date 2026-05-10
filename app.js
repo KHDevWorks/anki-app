@@ -96,8 +96,6 @@ document.getElementById("logoutBtn").onclick = async () => {
   await signOut(auth);
 };
 
-// 認証状態監視（UI表示）
-onAuthStateChanged(auth, (user) => {
 // 認証状態監視（UI表示および初期データ同期）
 onAuthStateChanged(auth, async (user) => {
   if (user) {
