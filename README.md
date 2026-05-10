@@ -8,7 +8,7 @@ GitHub Pages 上で動作し、スマホ・PC どちらでも快適に利用で�
 
 ## 🚀 デモ（GitHub Pages）
 
-https://github.com/KHDevWorks/anki-app.git
+https://khdevworks.github.io/anki-app/
 
 ---
 
@@ -57,7 +57,7 @@ OS のテーマに合わせて自動切り替え。
 
 ---
 
-## � 最近の変更 (2026-05-06)
+## � 最近の変更 (2026-05-10)
 
 ### デバッグ修正
 - **index.html**: 存在しない `auth.js` のスクリプトタグを削除、タイポの `scrip` を `script` に修正、Dexie.js の CDN を追加（IndexedDB 対応）
@@ -76,7 +76,7 @@ OS のテーマに合わせて自動切り替え。
 - **app.js**: UI 層に整理、各層の依存関係を明確化
 - **各ファイル**: 機能ごとのコメント追加
 
-### 動作確認テスト (2026-05-06)
+### 動作確認テスト (2026-05-10)
 
 #### 環境
 - **ホスト**: `http://127.0.0.1:8000/index.html`
@@ -102,7 +102,7 @@ OS のテーマに合わせて自動切り替え。
 ### 1. リポジトリをクローン
 
 ```bash
-git clone https://github.com/YOUR_NAME/YOUR_REPO_NAME.git
+git clone https://github.com/KHDevWorks/anki-app.git
 cd anki-app
 ```
 
