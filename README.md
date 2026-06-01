@@ -32,7 +32,6 @@ IndexedDB + Dexie.js によるローカル保存、PWA によるホーム画面�
 
 ## 工夫した点
 
-- 
 - **オフラインファースト設計**
 → IndexedDB + Service Worker により、完全オフラインで動作
 - **Dexie.js による高速クエリ**
